@@ -10,13 +10,20 @@ const corsOptions = {
     "http://localhost:5173",
     "http://localhost:3000",
     "https://cs9-frontend-kiara.vercel.app",
+    "https://cs9-frontend.vercel.app",
+    "https://cs9-putrikiarasalsabilaarief.vercel.app", // Add any other potential frontend URLs
   ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   optionsSuccessStatus: 200,
+  maxAge: 86400, // Cache preflight request for 24 hours
 };
 
 app.use(cors(corsOptions));
+
+// Handle preflight requests
+app.options("*", cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -27,6 +34,7 @@ app.get("/", (req, res) => {
     status: "success",
     message: "API is running",
     env: process.env.NODE_ENV || "development",
+    timestamp: new Date().toISOString(),
   });
 });
 
