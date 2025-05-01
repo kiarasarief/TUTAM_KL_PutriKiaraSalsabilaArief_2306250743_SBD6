@@ -14,10 +14,9 @@ const corsOptions = {
     "https://cs9-putrikiarasalsabilaarief.vercel.app", // Add any other potential frontend URLs
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true,
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
   optionsSuccessStatus: 200,
-  maxAge: 86400, // Cache preflight request for 24 hours
+  maxAge: 86400, // Cache preflight request for 24 hours
 };
 
 app.use(cors(corsOptions));
