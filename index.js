@@ -6,17 +6,10 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 const corsOptions = {
-  origin: [
-    "http://localhost:5173",
-    "http://localhost:3000",
-    "https://cs9-frontend-kiara.vercel.app",
-    "https://cs9-frontend.vercel.app",
-    "https://cs9-putrikiarasalsabilaarief.vercel.app", // Add any other potential frontend URLs
-  ],
+  origin: "*",
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  credentials: false, // Disabled credentials
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
-  optionsSuccessStatus: 200,
-  maxAge: 86400, // Cache preflight request for 24 hours
 };
 
 app.use(cors(corsOptions));
