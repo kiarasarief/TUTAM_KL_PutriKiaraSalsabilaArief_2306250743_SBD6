@@ -23,7 +23,11 @@ app.use(express.urlencoded({ extended: true }));
 
 // Basic health check endpoint
 app.get("/", (req, res) => {
-  res.json({ status: "success", message: "API is running" });
+  res.json({
+    status: "success",
+    message: "API is running",
+    env: process.env.NODE_ENV || "development",
+  });
 });
 
 // Routes
@@ -34,12 +38,34 @@ app.use("/transaction", require("./src/routes/transaction.route"));
 
 // Global error handler
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error("Error encountered:", err);
+
+  // More detailed logging for non-production environments
+  if (process.env.NODE_ENV !== "production") {
+    console.error("Error details:", {
+      message: err.message,
+      stack: err.stack,
+      code: err.code,
+    });
+  }
+
   res.status(500).json({
     status: "error",
     message: "Something went wrong!",
-    error: process.env.NODE_ENV === "production" ? {} : err.message,
+    error:
+      process.env.NODE_ENV === "production"
+        ? {}
+        : {
+            message: err.message,
+            code: err.code,
+          },
   });
+});
+
+// Handle unhandled promise rejections
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled Rejection at:", promise, "reason:", reason);
+  // Application continues running despite unhandled promise rejections
 });
 
 app.listen(PORT, () => {

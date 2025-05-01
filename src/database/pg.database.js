@@ -10,29 +10,10 @@ const pool = new Pool({
   },
 });
 
-const connect = async () => {
-  try {
-    const client = await pool.connect();
-    console.log("Connected to the Database");
-    client.release();
-  } catch (error) {
-    console.error("Error connecting to the database:", error.message);
-    // Don't crash the app, but log the error
-    if (!isProduction) {
-      console.error("Connection details:", {
-        connectionString: process.env.PG_CONNECTION_STRING
-          ? "Set (not showing for security)"
-          : "NOT SET",
-      });
-    }
-  }
-};
-
-connect();
-
 const query = async (text, params) => {
   const start = Date.now();
   try {
+    // Will automatically establish a connection when needed
     const res = await pool.query(text, params);
     const duration = Date.now() - start;
     console.log("Executed query", { text, duration, rows: res.rowCount });
